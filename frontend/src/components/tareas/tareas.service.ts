@@ -14,4 +14,10 @@ export class TareasService {
   crear(titulo: string): Observable<Tarea> {
     return this.http.post<Tarea>(`${this.apiUrl}/tareas`, { titulo });
   }
+  actualizar(id: number, titulo: string): Observable<Tarea> {
+    return this.http.put<Tarea>(`${this.apiUrl}/tareas/${id}`, { titulo });
+  }
+  eliminar(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/tareas/${id}`);
+  }
 }
