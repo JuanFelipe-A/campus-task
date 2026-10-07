@@ -20,4 +20,12 @@ export class TareasService {
             )
             return resultado.rows[0];
       }
+
+      async actualizar(id: number, titulo: string): Promise<Tarea> {
+            const resultado = await this.db.query<Tarea>(
+                  'UPDATE tareas SET titulo = $1 WHERE id = $2 RETURNING id, titulo',
+                  [titulo, id],
+            );
+            return resultado.rows[0];
+      }
 }
