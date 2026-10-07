@@ -17,7 +17,7 @@ export class TareasService {
   actualizar(id: number, titulo: string): Observable<Tarea> {
     return this.http.patch<Tarea>(`${this.apiUrl}/tareas/${id}`, { titulo });
   }
-  eliminar(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/tareas/${id}`);
+  eliminar(id: number): Observable<Tarea> {
+    return this.http.delete<Tarea>(`${this.apiUrl}/tareas/${id}`);
   }
 }
