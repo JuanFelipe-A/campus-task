@@ -28,4 +28,12 @@ export class TareasService {
             );
             return resultado.rows[0];
       }
+
+      async eliminar(id: number): Promise<Tarea> {
+            const resultado = await this.db.query<Tarea>(
+                  'DELETE FROM tareas WHERE id = $1 RETURNING id, titulo',
+                  [id],
+            );
+            return resultado.rows[0];
+      }
 }

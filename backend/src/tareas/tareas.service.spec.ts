@@ -53,4 +53,15 @@ describe('TareasService', () => {
     );
   });
 
+  it('elimina la tarea por id y devuelve la fila eliminada', async () => {
+    const eliminada = { id: 2, titulo: 'Preparar el entorno de desarrollo' };
+    query.mockResolvedValue({ rows: [eliminada] });
+
+    await expect(service.eliminar(2)).resolves.toEqual(eliminada);
+    expect(query).toHaveBeenCalledWith(
+      'DELETE FROM tareas WHERE id = $1 RETURNING id, titulo',
+      [2],
+    );
+  });
+
 });
