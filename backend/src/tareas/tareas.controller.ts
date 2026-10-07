@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   NotFoundException,
   Param,
@@ -31,6 +32,15 @@ export class TareasController {
     @Body('titulo') titulo: string,
   ): Promise<Tarea> {
     const tarea = await this.tareasService.actualizar(id, titulo);
+    if (!tarea) {
+      throw new NotFoundException(`No existe la tarea con id ${id}`);
+    }
+    return tarea;
+  }
+
+  @Delete(':id')
+  async eliminar(@Param('id', ParseIntPipe) id: number): Promise<Tarea> {
+    const tarea = await this.tareasService.eliminar(id);
     if (!tarea) {
       throw new NotFoundException(`No existe la tarea con id ${id}`);
     }
