@@ -13,7 +13,7 @@ describe('TareasComponent', () => {
   ];
 
   beforeEach(async () => {
-    tareasService = jasmine.createSpyObj('TareasService', ['listar', 'crear']);
+    tareasService = jasmine.createSpyObj('TareasService', ['listar', 'crear' , 'actualizar', 'eliminar']);
     tareasService.listar.and.returnValue(of(iniciales));
 
     await TestBed.configureTestingModule({
@@ -55,5 +55,50 @@ describe('TareasComponent', () => {
       'Leer la guía de la clase 2',
       'Preparar el entorno',
     ]);
+  });
+  it('edita una tarea al pulsar Editar y Guardar', () => {
+    tareasService.actualizar.and.returnValue(
+      of({ id: 1, titulo: 'Título nuevo' }),
+    );
+
+    const elemento: HTMLElement = fixture.nativeElement;
+    const botonPorTexto = (texto: string) =>
+      Array.from(elemento.querySelectorAll('button')).find(
+        (b) => b.textContent?.trim() === texto,
+      ) as HTMLButtonElement;
+
+    botonPorTexto('Editar').click();
+    fixture.detectChanges();
+
+    const campo = elemento.querySelector('.editar-input') as HTMLInputElement;
+    expect(campo).not.toBeNull();
+    campo.value = 'Título nuevo';
+    campo.dispatchEvent(new Event('input'));
+
+    botonPorTexto('Guardar').click();
+    fixture.detectChanges();
+
+    expect(tareasService.actualizar).toHaveBeenCalledWith(1, 'Título nuevo');
+    const titulos = Array.from(elemento.querySelectorAll('.titulo')).map(
+      (nodo) => nodo.textContent,
+    );
+    expect(titulos).toEqual(['Título nuevo']);
+  });
+
+  it('elimina una tarea al pulsar Eliminar', () => {
+    tareasService.eliminar.and.returnValue(
+      of({ id: 1, titulo: 'Leer la guía de la clase 2' }),
+    );
+
+    const elemento: HTMLElement = fixture.nativeElement;
+    const eliminar = Array.from(elemento.querySelectorAll('button')).find(
+      (b) => b.textContent?.trim() === 'Eliminar',
+    ) as HTMLButtonElement;
+
+    eliminar.click();
+    fixture.detectChanges();
+
+    expect(tareasService.eliminar).toHaveBeenCalledWith(1);
+    expect(elemento.querySelectorAll('.titulo').length).toBe(0);
   });
 });
